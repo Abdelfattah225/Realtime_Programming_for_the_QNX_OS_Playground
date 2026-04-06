@@ -173,3 +173,16 @@ All the information that Startup configures gets written into a **System Page** 
 ### Why Does This Matter?
 
 **"So that if a process needs to have access to some of this information, it could look at that if it has the appropriate rights."**
+
+## Summary
+
+| Stage | Who Provides It | What It Does |
+|-------|----------------|--------------|
+| **BIOS/uBoot** | Board/SOC vendor | Minimal HW init, jump to IPL |
+| **IPL** | QNX (board-specific) | Clocks, chip selects, RAM, find IFS |
+| **Startup** | QNX (board-specific) | Detailed HW init, write **System Page** (RAM, IRQs, timers, clusters) |
+| **procnto** | QNX | Starts microkernel + process manager, runs boot script |
+| **Boot Script** | YOU (developer) | Lists all drivers/apps/services to launch |
+| **System Page** | Written by Startup | Read-only HW info mapped into ALL processes so they can query it without kernel calls |
+
+> **In one sentence:** QNX boots through **IPL** (basic HW init) → **Startup** (detailed HW config written to a **System Page** readable by all processes) → **procnto** (microkernel + process manager) → **Boot Script** (where YOU specify exactly which drivers and apps to launch), giving you **complete control** over what runs on your embedded system.
